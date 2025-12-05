@@ -84,7 +84,7 @@ void initialise()
     gShader.load("shaders/vertex.glsl", "shaders/fragment.glsl");
 
     // Create scenes
-    gMenuScene = new MenuScene(ORIGIN, "#1a1a2e");
+    gMenuScene = new MenuScene(ORIGIN, "#000000");
     gLevel1 = new Level1(ORIGIN, "#000000");
     gLevel2 = new Level2(ORIGIN, "#000000");
     gLevel3 = new Level3(ORIGIN, "#000000");
@@ -227,23 +227,8 @@ void render()
     
     if (gCurrentLevel == 0)
     {
-        // Menu rendering
+        // Menu rendering (handles win/lose screens internally)
         gCurrentScene->render();
-
-        if (gGameWon)
-        {
-            const char* message = "You Win!";
-            int fontSize = 50;
-            int width = MeasureText(message, fontSize);
-            DrawText(message, SCREEN_WIDTH / 2 - width / 2, SCREEN_HEIGHT / 2 - 100, fontSize, GREEN);
-        }
-        if (gGameLost)
-        {
-            const char* message = "You Lose!";
-            int fontSize = 50;
-            int width = MeasureText(message, fontSize);
-            DrawText(message, SCREEN_WIDTH / 2 - width / 2, SCREEN_HEIGHT / 2 - 100, fontSize, RED);
-        }
     }
     else
     {

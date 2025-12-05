@@ -3,6 +3,10 @@
 constexpr int SCREEN_WIDTH = 1000;
 constexpr int SCREEN_HEIGHT = 600;
 
+// External global variables
+extern bool gGameWon;
+extern bool gGameLost;
+
 MenuScene::MenuScene() : Scene { {0.0f}, nullptr } {}
 MenuScene::MenuScene(Vector2 origin, const char *bgHexCode) : Scene { origin, bgHexCode } {}
 
@@ -17,7 +21,18 @@ void MenuScene::update(float deltaTime)
 {
     if (IsKeyPressed(KEY_ENTER))
     {
-        mGameState.nextSceneID = 1; // Go to first level
+        if (gGameWon || gGameLost)
+        {
+            // Return to menu from win/lose screens
+            gGameWon = false;
+            gGameLost = false;
+            // Not set nextSceneID, just reset flags to show menu
+        }
+        else
+        {
+            // Start game from normal menu
+            mGameState.nextSceneID = 1; // Go to first level
+        }
     }
 }
 
@@ -26,7 +41,64 @@ void MenuScene::render()
     ClearBackground(ColorFromHex(mBGColourHexCode));
     
     int screenWidth = GetScreenWidth();
+    int screenHeight = GetScreenHeight();
     
+    // Check if we should show win/lose screen instead of normal menu
+    if (gGameWon)
+    {
+        // Win screen
+        const char* winMessage = "You Win!";
+        const char* instruction = "Press Enter to Return to Menu";
+        
+        int winFontSize = 80;
+        int instructionFontSize = 35;
+        
+        int winWidth = MeasureText(winMessage, winFontSize);
+        int instructionWidth = MeasureText(instruction, instructionFontSize);
+        
+        DrawText(winMessage, 
+                 screenWidth / 2 - winWidth / 2, 
+                 screenHeight / 2 - 100, 
+                 winFontSize, 
+                 GREEN);
+        
+        DrawText(instruction, 
+                 screenWidth / 2 - instructionWidth / 2, 
+                 screenHeight / 2 + 50, 
+                 instructionFontSize, 
+                 WHITE);
+        
+        return;
+    }
+    
+    if (gGameLost)
+    {
+        // Lose screen
+        const char* loseMessage = "You Lose!";
+        const char* instruction = "Press Enter to Return to Menu";
+        
+        int loseFontSize = 80;
+        int instructionFontSize = 35;
+        
+        int loseWidth = MeasureText(loseMessage, loseFontSize);
+        int instructionWidth = MeasureText(instruction, instructionFontSize);
+        
+        DrawText(loseMessage, 
+                 screenWidth / 2 - loseWidth / 2, 
+                 screenHeight / 2 - 100, 
+                 loseFontSize, 
+                 RED);
+        
+        DrawText(instruction, 
+                 screenWidth / 2 - instructionWidth / 2, 
+                 screenHeight / 2 + 50, 
+                 instructionFontSize, 
+                 WHITE);
+        
+        return;
+    }
+    
+    // Normal menu with tutorial
     const char* gameTitle = "Adventure";
     const char* instruction = "Press Enter to Start";
     
