@@ -103,12 +103,12 @@ void initialise()
 
 void processInput() 
 {
-    if (gCurrentLevel == 0) return; // Menu handles its own input
+    if (gCurrentLevel == 0) return; 
 
     Entity *player = gCurrentScene->getState().xochitl;
     player->resetMovement();
 
-    // Top-down style controls: WASD to move in 4 directions.
+    // WASD
     bool moved = false;
     if (IsKeyDown(KEY_A)) { player->moveLeft();  gFacing = LEFT;  moved = true; }
     if (IsKeyDown(KEY_D)) { player->moveRight(); gFacing = RIGHT; moved = true; }

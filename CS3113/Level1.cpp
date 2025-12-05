@@ -22,7 +22,7 @@ void Level1::initialise()
     mLastFacing = DOWN;
     mLastAttack = false;
 
-    // Build Level 1 index matrix (open layout, no floor/room walls)
+    // Build Level 1 index matrix
     // Initialize all tiles to 0 (empty)
     for (int r = 0; r < LEVEL1_HEIGHT; ++r)
     {
@@ -203,6 +203,11 @@ void Level1::initialise()
     // Pick a random chest to hold the key
     mChestWithKeyIndex = rand() % mActiveChestCount;
 
+    /*
+    * Tries up to 500 times to find an empty tile (map index 0)
+    * Avoids map edges (starts at column/row 2)
+    * Returns tile coordinates (gx, gy)
+    */
     auto randomEmptyTile = [&]() {
         int gx = 0, gy = 0;
         for (int tries = 0; tries < 500; ++tries)
@@ -213,7 +218,12 @@ void Level1::initialise()
         }
         return std::pair<int,int>(gx, gy);
     };
-
+    
+    /*
+    * Converts tile coordinates to world position
+    * Creates a chest entity at that position
+    * Deactivates chests beyond mActiveChestCount
+    */
     for (int i = 0; i < Level1::MAX_CHESTS; ++i)
     {
         mChestOpened[i] = false;
@@ -240,7 +250,7 @@ void Level1::initialise()
         }
     }
 
-    // Key entity (initially inactive) – make it visually larger
+    // Key entity (initially inactive)
     mKeyEntity = new Entity({0,0}, {80.0f,80.0f}, "assets/game/keys.png", PLAYER);
     mKeyEntity->deactivate();
 
@@ -291,7 +301,7 @@ void Level1::update(float deltaTime)
         0
     );
 
-    // Wanderer manual wander: bounce in a small horizontal range, stop near player
+    // Wanderer wander: bounce in a small horizontal range, stop near player
     float wanderDist = Vector2Distance(mGameState.xochitl->getPosition(), mWanderer->getPosition());
     if (wanderDist < 140.0f)
     {
@@ -313,33 +323,13 @@ void Level1::update(float deltaTime)
         nullptr,
         0
     );
-    // Clamp wanderer inside map
-    Vector2 wp = mWanderer->getPosition();
-    float wminX = mGameState.map->getLeftBoundary() + 40.0f;
-    float wmaxX = mGameState.map->getRightBoundary() - 40.0f;
-    float wminY = mGameState.map->getTopBoundary() + 40.0f;
-    float wmaxY = mGameState.map->getBottomBoundary() - 40.0f;
-    wp.x = fmaxf(wminX, fminf(wmaxX, wp.x));
-    wp.y = fmaxf(wminY, fminf(wmaxY, wp.y));
-    mWanderer->setPosition(wp);
 
     // Interact with wanderer to drop flame
     if (!mFlameDropped)
     {
         float dist = Vector2Distance(mGameState.xochitl->getPosition(), mWanderer->getPosition());
-        // Make sure player is facing the wanderer
-        Vector2 dirToWanderer = Vector2Subtract(mWanderer->getPosition(), mGameState.xochitl->getPosition());
-        bool facing = false;
-        switch (gFacing)
-        {
-        case LEFT:  facing = dirToWanderer.x < 0 && fabs(dirToWanderer.y) < TILE_DIMENSION; break;
-        case RIGHT: facing = dirToWanderer.x > 0 && fabs(dirToWanderer.y) < TILE_DIMENSION; break;
-        case UP:    facing = dirToWanderer.y < 0 && fabs(dirToWanderer.x) < TILE_DIMENSION; break;
-        case DOWN:  facing = dirToWanderer.y > 0 && fabs(dirToWanderer.x) < TILE_DIMENSION; break;
-        default: break;
-        }
-
-        if (dist < 90.0f && facing && IsKeyPressed(KEY_E))
+        // Drop flame if close enough and E pressed
+        if (dist < 90.0f && IsKeyPressed(KEY_E))
         {
             mFlameDropped = true;
             mFlame->setPosition({mWanderer->getPosition().x, mWanderer->getPosition().y + 40.0f});
@@ -367,7 +357,7 @@ void Level1::update(float deltaTime)
             float dist = Vector2Distance(mGameState.xochitl->getPosition(), mChests[i]->getPosition());
             if (dist < 80.0f && IsKeyPressed(KEY_E))
             {
-                // open chest fully (use right‑most frame in atlas)
+                // open chest fully
                 mChestOpened[i] = true;
                 mChests[i]->setAnimationAtlas({{RIGHT, {3}}});
 
