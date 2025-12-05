@@ -23,7 +23,7 @@ void Level1::initialise()
     mLastAttack = false;
 
     // Build Level 1 index matrix
-    // Initialize all tiles to 0 (empty)
+    // Initialize all tiles to 0
     for (int r = 0; r < LEVEL1_HEIGHT; ++r)
     {
         for (int c = 0; c < LEVEL1_WIDTH; ++c)
