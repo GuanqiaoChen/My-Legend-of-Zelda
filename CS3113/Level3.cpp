@@ -30,7 +30,7 @@ void Level3::initialise()
     mLastAttack = false;
     mInvincibilityTimer = 1.0f; // Start with 1 second invincibility
 
-    // Build Level 3 index matrix (open layout, no floor/room walls)
+    // Build Level 3 index matrix 
     // Initialize all tiles to 0 (empty)
     for (int r = 0; r < LEVEL3_HEIGHT; ++r)
     {
@@ -54,12 +54,12 @@ void Level3::initialise()
         LEVEL3_DATA[r * LEVEL3_WIDTH + (LEVEL3_WIDTH - 1)] = 16;
     }
     
-    // Doors on outer walls for visual entry/exit
+    // Doors 
     int midRow = LEVEL3_HEIGHT / 2;
     LEVEL3_DATA[midRow * LEVEL3_WIDTH] = 37;
     LEVEL3_DATA[midRow * LEVEL3_WIDTH + (LEVEL3_WIDTH - 1)] = 38;
     
-    // Internal walls (partial, don't create separate rooms)
+    // Internal walls 
     // Horizontal partial walls
     for (int c = 6; c < 15; ++c) LEVEL3_DATA[10 * LEVEL3_WIDTH + c] = 2;
     for (int c = 8; c < 18; ++c) LEVEL3_DATA[12 * LEVEL3_WIDTH + c] = 2;
@@ -264,7 +264,7 @@ void Level3::initialise()
         return std::pair<int,int>(gx, gy);
     };
 
-    // Demons (followers, 2 HP, flying)
+    // Demons (followers, flying)
     std::map<Direction, std::vector<int>> demonAtlas = {
         {LEFT,  {0,1,2,3}},
         {RIGHT, {0,1,2,3}}
@@ -383,7 +383,7 @@ void Level3::update(float deltaTime)
         dp.y = fmaxf(dminY, fminf(dmaxY, dp.y));
         mDemons[i]->setPosition(dp);
 
-        // Take damage on touch (unless invincible or already took damage this frame)
+        // Take damage on touch unless invincible or already took damage this frame
         if (!tookDamageThisFrame && mInvincibilityTimer <= 0.0f && mGameState.xochitl->checkCollisionWithAI(mDemons[i]))
         {
             gLives--;
@@ -490,7 +490,7 @@ void Level3::update(float deltaTime)
         mGameState.xochitl->resetForceAnimation();
     }
 
-    // Camera follows player (x and y)
+    // Camera
     Vector2 currentPlayerPosition = { mGameState.xochitl->getPosition().x, mGameState.xochitl->getPosition().y };
     panCamera(&mGameState.camera, &currentPlayerPosition);
 }

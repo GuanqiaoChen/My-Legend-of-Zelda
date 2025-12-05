@@ -30,7 +30,7 @@ void Level2::initialise()
     mLastAttack = false;
     mInvincibilityTimer = 1.0f; // Start with 1 second invincibility
 
-    // Build Level 2 index matrix (open layout, no floor/room walls)
+    // Build Level 2 index matrix 
     // Initialize all tiles to 0 (empty)
     for (int r = 0; r < LEVEL2_HEIGHT; ++r)
     {
@@ -54,12 +54,12 @@ void Level2::initialise()
         LEVEL2_DATA[r * LEVEL2_WIDTH + (LEVEL2_WIDTH - 1)] = 16;
     }
     
-    // Doors on outer walls for visual entry/exit
+    // Doors
     int midRow = LEVEL2_HEIGHT / 2;
     LEVEL2_DATA[midRow * LEVEL2_WIDTH] = 37;
     LEVEL2_DATA[midRow * LEVEL2_WIDTH + (LEVEL2_WIDTH - 1)] = 38;
     
-    // Internal walls (partial, don't create separate rooms)
+    // Internal walls
     // Horizontal partial walls
     for (int c = 10; c < 20; ++c) LEVEL2_DATA[14 * LEVEL2_WIDTH + c] = 2;
     for (int c = 12; c < 25; ++c) LEVEL2_DATA[18 * LEVEL2_WIDTH + c] = 2;
@@ -75,7 +75,6 @@ void Level2::initialise()
     for (int r = 25; r < 38; ++r) LEVEL2_DATA[r * LEVEL2_WIDTH + 32] = 16;
     for (int r = 10; r < 20; ++r) LEVEL2_DATA[r * LEVEL2_WIDTH + 36] = 16;
     for (int r = 20; r < 30; ++r) LEVEL2_DATA[r * LEVEL2_WIDTH + 22] = 11;
-    // for (int r = 20; r < 30; ++r) LEVEL2_DATA[r * LEVEL2_WIDTH + 28] = 16;
     
     // Squared doors (67, 68)
     LEVEL2_DATA[12 * LEVEL2_WIDTH + 18] = 67;
@@ -369,7 +368,7 @@ void Level2::update(float deltaTime)
         sp.y = fmaxf(sminY, fminf(smaxY, sp.y));
         mSkeletons[i]->setPosition(sp);
 
-        // Take damage on touch (unless invincible or already took damage this frame)
+        // Take damage on touch unless invincible or already took damage this frame
         if (!tookDamageThisFrame && mInvincibilityTimer <= 0.0f && mGameState.xochitl->checkCollisionWithAI(mSkeletons[i]))
         {
             gLives--;
@@ -408,7 +407,7 @@ void Level2::update(float deltaTime)
             if (dist < 80.0f && IsKeyPressed(KEY_E))
             {
                 mChestOpened[i] = true;
-                // Fully open chest using right‑most frame
+                // Fully open chest
                 mChests[i]->setAnimationAtlas({{RIGHT, {3}}});
                 if (i == mChestWithKeyIndex)
                 {
@@ -484,7 +483,7 @@ void Level2::update(float deltaTime)
         mGameState.xochitl->resetForceAnimation();
     }
 
-    // Camera follows player (x and y)
+    // Camera
     Vector2 currentPlayerPosition = { mGameState.xochitl->getPosition().x, mGameState.xochitl->getPosition().y };
     panCamera(&mGameState.camera, &currentPlayerPosition);
 }

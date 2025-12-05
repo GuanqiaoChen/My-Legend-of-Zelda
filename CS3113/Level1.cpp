@@ -48,12 +48,12 @@ void Level1::initialise()
         LEVEL1_DATA[r * LEVEL1_WIDTH + (LEVEL1_WIDTH - 1)] = 16;
     }
     
-    // Doors on outer walls for visual entry/exit
+    // Doors 
     int midRow = LEVEL1_HEIGHT / 2;
-    LEVEL1_DATA[midRow * LEVEL1_WIDTH] = 37; // left door
-    LEVEL1_DATA[midRow * LEVEL1_WIDTH + (LEVEL1_WIDTH - 1)] = 38; // right door
+    LEVEL1_DATA[midRow * LEVEL1_WIDTH] = 37;
+    LEVEL1_DATA[midRow * LEVEL1_WIDTH + (LEVEL1_WIDTH - 1)] = 38; 
     
-    // Internal walls (partial, don't create separate rooms)
+    // Internal walls 
     // Horizontal partial walls
     for (int c = 8; c < 18; ++c) LEVEL1_DATA[12 * LEVEL1_WIDTH + c] = 2;
     for (int c = 10; c < 20; ++c) LEVEL1_DATA[15 * LEVEL1_WIDTH + c] = 2;
@@ -67,7 +67,6 @@ void Level1::initialise()
     for (int r = 32; r < 42; ++r) LEVEL1_DATA[r * LEVEL1_WIDTH + 12] = 11;
     for (int r = 30; r < 40; ++r) LEVEL1_DATA[r * LEVEL1_WIDTH + 35] = 16;
     for (int r = 20; r < 30; ++r) LEVEL1_DATA[r * LEVEL1_WIDTH + 22] = 11;
-    // for (int r = 20; r < 30; ++r) LEVEL1_DATA[r * LEVEL1_WIDTH + 28] = 16;
     
     // Squared doors (67, 68)
     LEVEL1_DATA[10 * LEVEL1_WIDTH + 15] = 67;
