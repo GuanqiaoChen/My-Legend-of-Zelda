@@ -148,7 +148,7 @@ void update()
         deltaTime -= FIXED_TIMESTEP;
     }
 
-    // Update light position in screen space
+    // Update light position
     if (gCurrentLevel != 0 && gCurrentScene && gCurrentScene->getState().xochitl)
     {
         gLightPosition = GetWorldToScreen2D(
